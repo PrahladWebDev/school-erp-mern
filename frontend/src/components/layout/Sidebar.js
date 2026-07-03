@@ -109,7 +109,7 @@ const ROLE_LABELS = {
   teacher: 'Teacher', parent: 'Parent', student: 'Student',
 };
 
-export default function Sidebar({ collapsed, mobileOpen }) {
+export default function Sidebar({ collapsed, mobileOpen, onClose }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, school } = useSelector(s => s.auth);
@@ -161,6 +161,7 @@ export default function Sidebar({ collapsed, mobileOpen }) {
                 to={item.to}
                 className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                 title={collapsed ? item.label : ''}
+                onClick={onClose}
               >
                 <span className="nav-item-icon">{item.icon}</span>
                 {!collapsed && <span className="nav-item-text">{item.label}</span>}
@@ -174,7 +175,7 @@ export default function Sidebar({ collapsed, mobileOpen }) {
       <div className="sidebar-footer">
         <div className="sidebar-user">
           <div
-            onClick={() => navigate(profilePath)}
+            onClick={() => { onClose?.(); navigate(profilePath); }}
             title="Profile & Settings"
             style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, cursor: 'pointer', minWidth: 0 }}
           >
