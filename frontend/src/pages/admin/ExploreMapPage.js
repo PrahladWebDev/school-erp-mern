@@ -66,6 +66,14 @@ export default function ExploreMapPage() {
     }).addTo(map);
 
     leafletMapRef.current = map;
+
+    // Leaflet needs to recalc its size if the container was resized
+    // (e.g. rotating the device, or the mobile layout stacking the panels)
+    const handleResize = () => map.invalidateSize();
+    window.addEventListener('resize', handleResize);
+    // Also fix initial size in case the container wasn't fully laid out yet
+    setTimeout(handleResize, 100);
+    return () => window.removeEventListener('resize', handleResize);
   }, [mapReady]);
 
   useEffect(() => {
@@ -153,9 +161,9 @@ export default function ExploreMapPage() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
+      <div className="explore-map-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
         {/* Map */}
-        <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid var(--gray-200)', position: 'relative' }}>
+        <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid var(--gray-200)', position: 'relative', minHeight: 320 }}>
           {loading && (
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.8)', zIndex: 1000 }}>
               <PageLoader message="Loading schools..." />
@@ -165,7 +173,7 @@ export default function ExploreMapPage() {
         </div>
 
         {/* Schools list panel */}
-        <div className="card" style={{ overflow: 'auto', padding: 0 }}>
+        <div className="card" style={{ overflow: 'auto', padding: 0, minHeight: 240 }}>
           <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--gray-100)', fontWeight: 600, fontSize: '0.9rem' }}>
             Schools ({schools.length})
           </div>
