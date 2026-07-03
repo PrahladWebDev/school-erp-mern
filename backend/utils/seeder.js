@@ -14,7 +14,7 @@ const loadTenantModels = (conn) => getTenantModels(conn);
 // ─── 1. Super Admin ───────────────────────────────────────────────────────────
 const seedSuperAdmin = async () => {
   const existing = await User.findOne({ role: 'super_admin' });
-  if (existing) { logger.info('Super admin already exists'); return; }
+  if (existing) { console.log('Super admin already exists'); return; }
 
   await User.create({
     name: 'Super Administrator',
@@ -25,9 +25,9 @@ const seedSuperAdmin = async () => {
     isActive: true,
     isEmailVerified: true
   });
-  logger.info('✅ Super admin created');
-  logger.info(`   Email   : ${process.env.SUPER_ADMIN_EMAIL || 'superadmin@schoolerp.com'}`);
-  logger.info(`   Password: ${process.env.SUPER_ADMIN_PASSWORD || 'SuperAdmin@123'}`);
+  console.log('✅ Super admin created');
+  console.log(`   Email   : ${process.env.SUPER_ADMIN_EMAIL || 'superadmin@schoolerp.com'}`);
+  console.log(`   Password: ${process.env.SUPER_ADMIN_PASSWORD || 'SuperAdmin@123'}`);
 };
 
 // ─── 2. Demo School + Admin ───────────────────────────────────────────────────
@@ -73,9 +73,9 @@ const seedSampleSchool = async () => {
       isActive: true
     });
     await School.findByIdAndUpdate(school._id, { adminUserId: adminUser._id });
-    logger.info('✅ Demo school + admin created');
+    console.log('✅ Demo school + admin created');
   } else {
-    logger.info('Demo school already exists — seeding tenant data');
+    console.log('Demo school already exists — seeding tenant data');
   }
 
   return school;
@@ -127,7 +127,7 @@ const seedTenantData = async (school) => {
       ]},
     ];
     existingClasses = await Class.insertMany(classData);
-    logger.info(`✅ Created ${existingClasses.length} classes`);
+    console.log(`✅ Created ${existingClasses.length} classes`);
   }
 
   const classMap = {};
@@ -194,7 +194,7 @@ const seedTenantData = async (school) => {
     await Teacher.findByIdAndUpdate(teacher._id, { userId: userAccount._id });
     createdTeachers.push(teacher);
   }
-  logger.info(`✅ ${createdTeachers.length} teachers ready`);
+  console.log(`✅ ${createdTeachers.length} teachers ready`);
 
   // ── Students + Parents ───────────────────────────────────────────────────────
   const studentSeeds = [
@@ -305,7 +305,7 @@ const seedTenantData = async (school) => {
       parents: parentCreds
     });
   }
-  logger.info(`✅ ${studentCreds.length} students ready`);
+  console.log(`✅ ${studentCreds.length} students ready`);
 
   return { teacherSeeds, studentCreds };
 };
@@ -314,36 +314,37 @@ const seedTenantData = async (school) => {
 const runSeeder = async () => {
   try {
     await connectGlobalDB();
-    logger.info('🌱 Starting database seeder...');
+    console.log('🌱 Starting database seeder...');
 
     await seedSuperAdmin();
     const school = await seedSampleSchool();
     const { teacherSeeds, studentCreds } = await seedTenantData(school);
 
-    logger.info('');
-    logger.info('══════════════════════════════════════════════════');
-    logger.info('             SEED CREDENTIALS SUMMARY             ');
-    logger.info('══════════════════════════════════════════════════');
-    logger.info('');
-    logger.info('🔐 SUPER ADMIN');
-    logger.info(`   Email   : ${process.env.SUPER_ADMIN_EMAIL || 'superadmin@schoolerp.com'}`);
-    logger.info(`   Password: ${process.env.SUPER_ADMIN_PASSWORD || 'SuperAdmin@123'}`);
-    logger.info('');
-    logger.info('🏫 SCHOOL ADMIN  (School Code: DEMO2024)');
-    logger.info('   Email   : admin@gramvidyalaya.in');
-    logger.info('   Password: Admin@1234');
-    logger.info('');
-    logger.info('👨‍🏫 TEACHERS  (password: Teacher@1234)');
-    teacherSeeds.forEach(t => logger.info(`   ${t.email}`));
-    logger.info('');
-    logger.info('👨‍🎓 STUDENTS  (password: Student@1234)');
-    studentCreds.forEach(s => s.studentEmail && logger.info(`   ${s.studentEmail}`));
-    logger.info('');
-    logger.info('👪 PARENTS  (password: Parent@1234)');
-    studentCreds.forEach(s => (s.parents || []).forEach(p => logger.info(`   ${p.email}`)));
-    logger.info('');
-    logger.info('══════════════════════════════════════════════════');
-    logger.info('✅ Seeding completed successfully!');
+    console.log('');
+    console.log('══════════════════════════════════════════════════');
+    console.log('             SEED CREDENTIALS SUMMARY             ');
+    console.log('══════════════════════════════════════════════════');
+    console.log('');
+    console.log('🔐 SUPER ADMIN');
+    console.log(`   Email   : ${process.env.SUPER_ADMIN_EMAIL || 'superadmin@schoolerp.com'}`);
+    console.log(`   Password: ${process.env.SUPER_ADMIN_PASSWORD || 'SuperAdmin@123'}`);
+    console.log('');
+    console.log('🏫 SCHOOL ADMIN  (School Code: DEMO2024)');
+    console.log('   Email   : admin@gramvidyalaya.in');
+    console.log('   Password: Admin@1234');
+    console.log('');
+    console.log('👨‍🏫 TEACHERS  (password: Teacher@1234)');
+    teacherSeeds.forEach(t => console.log(`   ${t.email}`));
+
+    console.log('');
+    console.log('👨‍🎓 STUDENTS  (password: Student@1234)');
+    studentCreds.forEach(s => s.studentEmail && console.log(`   ${s.studentEmail}`));
+    console.log('');
+    console.log('👪 PARENTS  (password: Parent@1234)');
+    studentCreds.forEach(s => (s.parents || []).forEach(p => console.log(`   ${p.email}`)));
+    console.log('');
+    console.log('══════════════════════════════════════════════════');
+    console.log('✅ Seeding completed successfully!');
 
     process.exit(0);
   } catch (err) {
