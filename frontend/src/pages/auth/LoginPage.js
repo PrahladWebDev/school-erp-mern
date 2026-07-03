@@ -12,6 +12,33 @@ const ROLE_REDIRECTS = {
   student:      '/student/dashboard',
 };
 
+// Fixed-credential accounts created by backend/scripts/seedDatabase.js.
+// Student & parent logins use a dynamically generated admission number, so
+// they can't be listed here — they're printed to the console when the
+// seed script runs instead.
+const DEMO_ACCOUNTS = [
+  {
+    label: 'Super Admin', email: 'superadmin@schoolerp.com', password: 'SuperAdmin@123',
+    icon: '👑', color: '#d97706', bg: '#fffbeb',
+  },
+  {
+    label: 'School Admin (DEMO2024)', email: 'admin@gramvidyalaya.in', password: 'Admin@1234',
+    icon: '🏫', color: '#16a34a', bg: '#f0fdf4',
+  },
+  {
+    label: 'Teacher — Ramesh Patil', email: 'ramesh.patil@demo2024.school', password: 'Teacher@1234',
+    icon: '👨‍🏫', color: '#0284c7', bg: '#f0f9ff',
+  },
+  {
+    label: 'Teacher — Sunita Shinde', email: 'sunita.shinde@demo2024.school', password: 'Teacher@1234',
+    icon: '👩‍🏫', color: '#0284c7', bg: '#f0f9ff',
+  },
+  {
+    label: 'Teacher — Prakash More', email: 'prakash.more@demo2024.school', password: 'Teacher@1234',
+    icon: '👨‍🏫', color: '#0284c7', bg: '#f0f9ff',
+  },
+];
+
 export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -142,37 +169,43 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo credentials — Super Admin only */}
+          {/* Demo credentials — all seeded accounts */}
           <div style={{ marginTop: 28, padding: 16, background: 'var(--gray-50)', borderRadius: 12, border: '1px solid var(--gray-200)' }}>
             <p style={{ fontSize: '0.72rem', color: 'var(--gray-400)', marginBottom: 10, textAlign: 'center', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Demo Credentials
             </p>
 
-            {/* Super Admin */}
-            <button
-              onClick={() => setForm({ email: 'superadmin@schoolerp.com', password: 'SuperAdmin@123' })}
-              style={{
-                width: '100%', background: '#fff', border: '1.5px solid #f5a62330',
-                borderRadius: 10, padding: '10px 14px', cursor: 'pointer',
-                textAlign: 'left', transition: 'all 0.15s',
-                display: 'flex', alignItems: 'center', gap: 10,
-              }}
-            >
-              <div style={{
-                width: 34, height: 34, borderRadius: 8, background: '#fffbeb',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem',
-              }}>👑</div>
-              <div>
-                <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#d97706' }}>Super Admin</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--gray-400)', marginTop: 1 }}>superadmin@schoolerp.com</div>
-              </div>
-              <div style={{ marginLeft: 'auto', fontSize: '0.65rem', color: 'var(--gray-300)', fontFamily: 'monospace' }}>
-                SuperAdmin@123
-              </div>
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 260, overflowY: 'auto', paddingRight: 2 }}>
+              {DEMO_ACCOUNTS.map(acc => (
+                <button
+                  key={acc.email}
+                  type="button"
+                  onClick={() => setForm({ email: acc.email, password: acc.password })}
+                  style={{
+                    width: '100%', background: '#fff', border: `1.5px solid ${acc.color}30`,
+                    borderRadius: 10, padding: '10px 14px', cursor: 'pointer',
+                    textAlign: 'left', transition: 'all 0.15s',
+                    display: 'flex', alignItems: 'center', gap: 10,
+                  }}
+                >
+                  <div style={{
+                    width: 34, height: 34, borderRadius: 8, background: acc.bg,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem',
+                    flexShrink: 0,
+                  }}>{acc.icon}</div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 700, color: acc.color }}>{acc.label}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--gray-400)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{acc.email}</div>
+                  </div>
+                  <div style={{ marginLeft: 'auto', fontSize: '0.65rem', color: 'var(--gray-300)', fontFamily: 'monospace', flexShrink: 0 }}>
+                    {acc.password}
+                  </div>
+                </button>
+              ))}
+            </div>
 
             <p style={{ fontSize: '0.65rem', color: 'var(--gray-300)', marginTop: 10, textAlign: 'center', lineHeight: 1.5 }}>
-              School admin, teacher, student & parent accounts are created from the Super Admin panel and receive their credentials directly.
+              Student & parent accounts use an auto-generated admission number in their email (e.g. adm2600001@demo2024.school), password <code>Student@1234</code> / <code>Parent@1234</code> — printed to the console when the seed script runs.
             </p>
           </div>
         </div>
