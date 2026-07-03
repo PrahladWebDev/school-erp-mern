@@ -76,7 +76,7 @@ export default function SuperAdminDashboard() {
           <h1>Platform Dashboard</h1>
           <p>Overview of all schools on the platform</p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button className="btn btn-ghost" onClick={handleSyncStats} disabled={syncing} title="Recalculate student/teacher counts from each school DB">
             {syncing ? '⏳ Syncing...' : '🔄 Sync Stats'}
           </button>
