@@ -96,7 +96,18 @@ export default function IDCardPage() {
   const cardCount = mode === 'class' ? previewStudents.length : selected.size;
 
   return (
-    <div style={{ padding: '24px', maxWidth: 900, margin: '0 auto' }}>
+    <div className="idcard-page-wrap" style={{ maxWidth: 900, margin: '0 auto' }}>
+      <style>{`
+        .idcard-page-wrap { padding: 24px; }
+        .idcard-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+        .idcard-sidebar { position: sticky; top: 20px; }
+        @media (max-width: 768px) {
+          .idcard-page-wrap { padding: 12px; }
+          .idcard-grid { grid-template-columns: 1fr; gap: 16px; }
+          .idcard-sidebar { position: static; }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
       {/* Page Header */}
       <div style={{ marginBottom: 28 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
@@ -113,7 +124,7 @@ export default function IDCardPage() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20, alignItems: 'start' }}>
+      <div className="idcard-grid">
 
         {/* Left: Configuration */}
         <div>
@@ -248,7 +259,7 @@ export default function IDCardPage() {
         </div>
 
         {/* Right: Preview + Generate */}
-        <div style={{ position: 'sticky', top: 20 }}>
+        <div className="idcard-sidebar">
           {/* Card Preview */}
           <div style={{
             background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb',
@@ -371,7 +382,6 @@ export default function IDCardPage() {
               </>
             )}
           </button>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
           <p style={{ fontSize: 11, color: '#9ca3af', textAlign: 'center', marginTop: 10 }}>
             PDF will download automatically
