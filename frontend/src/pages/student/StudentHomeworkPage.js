@@ -38,6 +38,7 @@ export default function StudentHomeworkPage() {
                   <th>Subject</th>
                   <th>Title</th>
                   <th>Description</th>
+                  <th>Assigned By</th>
                   <th>Assigned Date</th>
                   <th>Due Date</th>
                   <th>Status</th>
@@ -52,6 +53,9 @@ export default function StudentHomeworkPage() {
                       <td>{hw.title}</td>
                       <td style={{ maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--gray-500)' }}>
                         {hw.description || '—'}
+                      </td>
+                      <td style={{ color: 'var(--gray-500)' }}>
+                        {hw.teacherName || '—'}
                       </td>
                       <td style={{ color: 'var(--gray-500)' }}>
                         {new Date(hw.assignedDate || hw.createdAt).toLocaleDateString('en-IN')}
