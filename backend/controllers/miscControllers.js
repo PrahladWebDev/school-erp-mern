@@ -41,16 +41,23 @@ const homeworkController = {
       const filter = {};
       const role = req.user.role;
 
+      // Use start-of-today (not the exact current timestamp) so homework
+      // due "today" doesn't disappear once the clock ticks past midnight UTC
+      // (which happens at 5:30 AM IST) — previously this made same-day
+      // homework vanish for most of the day.
+      const startOfToday = new Date();
+      startOfToday.setHours(0, 0, 0, 0);
+
       if (role === 'student') {
         // Students only see active homework for their own class
         const student = await Student.findById(req.user.profileId).lean();
         if (student?.class) filter.classId = student.class;
         filter.status = 'active';
-        filter.dueDate = { $gte: new Date() };
+        filter.dueDate = { $gte: startOfToday };
       } else if (role === 'parent') {
         // Parents see active homework; frontend may pass classId
         filter.status = 'active';
-        filter.dueDate = { $gte: new Date() };
+        filter.dueDate = { $gte: startOfToday };
         if (classId) filter.classId = classId;
       } else {
         // Teachers & Admins see all homework with optional filters
