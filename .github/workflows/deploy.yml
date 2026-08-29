@@ -29,7 +29,7 @@ jobs:
             echo "Updating School ERP Repository"
             echo "=================================="
 
-            cd /home/prahlad/schoolerp
+            cd /var/www/projects/schoolerp
 
             git fetch --prune origin
             git reset --hard origin/main
@@ -99,7 +99,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
           source: "frontend/build/*"
-          target: "/home/prahlad/schoolerp/frontend/"
+          target: "/var/www/projects/schoolerp/frontend/"
           strip_components: 1
 
       - name: Reload Nginx
